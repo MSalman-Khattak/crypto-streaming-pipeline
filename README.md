@@ -6,7 +6,7 @@ An end-to-end, real-time data engineering pipeline that streams live BTC/USDT tr
 
 ---
 
-## 📐 Architecture
+##  Architecture
 
 ```
 Binance WebSocket API
@@ -38,7 +38,7 @@ Binance WebSocket API
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -52,7 +52,7 @@ Binance WebSocket API
 
 ---
 
-## 📊 What the Pipeline Does
+##  What the Pipeline Does
 
 1. **Ingests** live BTC/USDT trades from Binance's public WebSocket feed
 2. **Streams** each trade event into Azure Event Hub using the Kafka-compatible protocol
@@ -63,7 +63,7 @@ Binance WebSocket API
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 crypto-streaming-project/
@@ -81,7 +81,7 @@ crypto-streaming-project/
 
 ---
 
-## ⚙️ Setup
+##  Setup
 
 ### Prerequisites
 - Azure subscription (Pay-As-You-Go; Free Trial subscriptions have compute quota restrictions that will block cluster creation)
@@ -121,7 +121,7 @@ Then run `notebooks/01_bronze_ingestion.py` in Databricks, and trigger the `bron
 ![Bronze to Silver to Gold row counts](docs/medallion_comparison.png)
 *Row counts shrinking from Bronze (18.4K raw events) → Silver (6.9K deduplicated trades) → Gold (29 one-minute OHLC candles) — visual proof the medallion architecture is genuinely refining data at each stage, not just relabeling it.*
 
-## 🐛 Challenges & Lessons Learned
+##  Challenges & Lessons Learned
 
 This project involved real, non-trivial troubleshooting — documenting it here because working through these issues *is* the learning:
 
@@ -133,7 +133,7 @@ This project involved real, non-trivial troubleshooting — documenting it here 
 
 ---
 
-## 💰 Cost Notes
+##  Cost Notes
 
 Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 - Auto-terminating the Databricks cluster after 30 minutes of inactivity
@@ -143,7 +143,7 @@ Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 
 ---
 
-## 📈 Screenshots
+##  Screenshots
 
 **Live streaming ingestion (Databricks notebook, Event Hub → Bronze):**
 
@@ -155,7 +155,7 @@ Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 - Add a `dlt.read_stream` incremental version of the Gold aggregation (currently a full batch recompute each run)
 - Add sorted-window logic for more precisely accurate Open/Close values in OHLC candles
@@ -165,6 +165,6 @@ Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 
 ---
 
-## 📄 License
+##  License
 
 MIT
