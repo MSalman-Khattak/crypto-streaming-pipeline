@@ -1,0 +1,4 @@
+.env
+.venv/
+terminal_history.txt
+__pycache__/

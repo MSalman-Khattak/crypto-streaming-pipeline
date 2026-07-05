@@ -1,0 +1,4 @@
+websocket-client==1.8.0
+azure-eventhub==5.14.0
+python-dotenv==1.0.1
+databricks-cli==0.18.0
