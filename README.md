@@ -2,13 +2,11 @@
 
 An end-to-end, real-time data engineering pipeline that streams live BTC/USDT trade data from Binance into Azure, processes it through a medallion architecture (Bronze → Silver → Gold) using Databricks, and visualizes it on a live dashboard.
 
-
-![Dashboard Screenshot](docs/dashboard_screenshot.png)
-*(Replace with your actual dashboard screenshot — see "Screenshots" section below)*
+![Dashboard Screenshot](docs/dashboard_full.png)
 
 ---
 
-##  Architecture
+## 📐 Architecture
 
 ```
 Binance WebSocket API
@@ -40,7 +38,7 @@ Binance WebSocket API
 
 ---
 
-##  Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -54,7 +52,7 @@ Binance WebSocket API
 
 ---
 
-##  What the Pipeline Does
+## 📊 What the Pipeline Does
 
 1. **Ingests** live BTC/USDT trades from Binance's public WebSocket feed
 2. **Streams** each trade event into Azure Event Hub using the Kafka-compatible protocol
@@ -65,7 +63,7 @@ Binance WebSocket API
 
 ---
 
-##  Repository Structure
+## 📁 Repository Structure
 
 ```
 crypto-streaming-project/
@@ -76,14 +74,14 @@ crypto-streaming-project/
 ├── notebooks/
 │   └── 01_bronze_ingestion.py # Databricks notebook: Event Hub → Bronze (Structured Streaming)
 ├── pipelines/
-│   └── bronze_to_silver.py    # Spark Declarative Pipeline: Bronze → Silver → Gold definitions
+│   └── bronze_silver_gold.py  # Spark Declarative Pipeline: Bronze → Silver → Gold definitions
 └── docs/
     └── dashboard_screenshot.png
 ```
 
 ---
 
-##  Setup
+## ⚙️ Setup
 
 ### Prerequisites
 - Azure subscription (Pay-As-You-Go; Free Trial subscriptions have compute quota restrictions that will block cluster creation)
@@ -116,11 +114,14 @@ pip install -r requirements.txt
 ```bash
 python send_to_eventhub.py
 ```
-Then run `notebooks/01_bronze_ingestion.py` in Databricks, and trigger the `bronze_to_silver.py` Spark Declarative Pipeline.
+Then run `notebooks/01_bronze_ingestion.py` in Databricks, and trigger the `bronze_silver_gold.py` Spark Declarative Pipeline.
 
 ---
 
-##  Challenges & Lessons Learned
+![Bronze to Silver to Gold row counts](docs/medallion_comparison.png)
+*Row counts shrinking from Bronze (18.4K raw events) → Silver (6.9K deduplicated trades) → Gold (29 one-minute OHLC candles) — visual proof the medallion architecture is genuinely refining data at each stage, not just relabeling it.*
+
+## 🐛 Challenges & Lessons Learned
 
 This project involved real, non-trivial troubleshooting — documenting it here because working through these issues *is* the learning:
 
@@ -132,7 +133,7 @@ This project involved real, non-trivial troubleshooting — documenting it here 
 
 ---
 
-##  Cost Notes
+## 💰 Cost Notes
 
 Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 - Auto-terminating the Databricks cluster after 30 minutes of inactivity
@@ -142,13 +143,27 @@ Built and tested on Azure's $200 free credit. Approximate costs, kept low by:
 
 ---
 
-##  Screenshots
+## 📈 Screenshots
 
-![alt text](medallion_comparison.png) ![alt text](dashboard_full.png)
+**Live streaming ingestion (Databricks notebook, Event Hub → Bronze):**
+
+![Bronze ingestion notebook](docs/bronze_ingestion_notebook.png)
+
+**Full dashboard:** see top of this README.
+
+**Medallion architecture row-count comparison:** see "Challenges & Lessons Learned" section above.
 
 ---
 
+## 🔮 Future Improvements
 
+- Add a `dlt.read_stream` incremental version of the Gold aggregation (currently a full batch recompute each run)
+- Add sorted-window logic for more precisely accurate Open/Close values in OHLC candles
+- Power BI dashboard with candlestick visualization for a more polished, non-technical-audience view
+- Enable File Events on the External Location (requires additional IAM roles) for lower-latency, lower-cost ingestion at scale
+- CI/CD via Databricks Asset Bundles
+
+---
 
 ## 📄 License
 
